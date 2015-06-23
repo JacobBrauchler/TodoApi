@@ -1,5 +1,4 @@
 var Task = require('../models/task').Task; 
-
 /*
  * Tasks Routes
  */
@@ -14,7 +13,7 @@ exports.index = function(req, res) {
 }
 
 exports.show = function(req, res) {
-  
+
   var id = req.params.id; 
   Task.findById(id, function(err, doc) {
     if(!err && doc) {
@@ -35,12 +34,12 @@ exports.create = function(req, res) {
   //Task.findOne({ name: task_name }, function(err, doc) {  // This line is case sensitive.
   Task.findOne({ name: { $regex: new RegExp(task_name, "i") } }, function(err, doc) {  // Using RegEx - search is case insensitive
     if(!err && !doc) {
-      
+
       var newTask = new Task(); 
 
       newTask.name = task_name; 
       newTask.description = description; 
-      
+
       newTask.save(function(err) {
 
         if(!err) {
@@ -52,7 +51,7 @@ exports.create = function(req, res) {
       });
 
     } else if(!err) {
-      
+
       // User is trying to create a task with a name that already exists. 
       res.json(403, {message: "Task with that name already exists, please update instead of create or create a new task with a different name."}); 
 
@@ -64,7 +63,7 @@ exports.create = function(req, res) {
 }
 
 exports.update = function(req, res) {
-  
+
   var id = req.body.id; 
   var task_name = req.body.task_name;
   var task_description = req.body.task_description; 
@@ -103,45 +102,28 @@ exports.delete = function(req, res) {
   });
 }
 
+//exports.FindByQuery = function(req, res) {
+
+
+
+
+  //var name = req.query.name;
+  //var query = Task.findOne({ name: 'task1' }, function(err, doc) {
+  //  if(!err && doc) {
+   //   res.json(200, doc);
+   // } else if(err) {
+   //   res.json(500, { message: "Error loading task." + err});
+   // } else {
+   //   res.json(404, { message: "Task not found."});
+   // }
+  //});
 //}
 
-exports.search = function(req, res) {
-  if (req.query.name) {
-	  var name = req.query.name;
-	  Task.findByName(name, function(err, doc) {
-	            if(!err && doc) {
-	              res.json(200, doc);
-	            } else if(err) {
-	              res.json(500, { message: "Error loading task." + err});
-	            } else {
-	              res.json(404, { message: "Task not found."});
-	            }
-	          });
-    // you have the name query
-  }
-  // etc.
-}
-	//var name = req.query.name;
-	//Task.findByName(name, function(err, doc) {
-	    //  if(!err && doc) {
-	      //  res.json(200, doc);
-	      //} else if(err) {
-	       // res.json(500, { message: "Error loading task." + err});
-	      //} else {
-	       // res.json(404, { message: "Task not found."});
-	      //}
-	    //});
-	 // }
-	
-  
-	
-	
-   
-	
-	
-	
-	
-   
-	    
-	   
-	
+
+
+
+
+
+
+
+

@@ -7,7 +7,10 @@ var express = require('express'),
 	http = require('http'),
 	tasks = require('./routes/tasks'),
 	mongoose = require('mongoose'),
-    task = require('./routes/search');
+    search = require('./routes/search');
+var Task = require('./models/task').Task; 
+
+  
 
 
 // MongoDB Connection 
@@ -27,6 +30,7 @@ var app = express();
 			app.use(app.router);
 			app.use(express.urlencoded());
 			app.use(express.json());
+
 		});
 		app.use(function(req, res, next) {
 		  res.header("Access-Control-Allow-Origin", "*");
@@ -37,11 +41,26 @@ var app = express();
 
 		app.get('/', routes.index);
 		app.get('/tasks', tasks.index);
+		//app.get('/search', tasks.FindByQuery);
+		//app.get('/tasks/:task.:name?', task.FindByQuery); 
+		app.get('/search', function(req, res) {
+  			var query = req.query
+  			//res.send(query['name']);
+  			Task.findOne({name: query['name']}, function(err, doc) {
+    			if(!err && doc) {
+      				res.json(200, doc);
+    			} else if(err) {
+      				res.json(500, { message: "Error loading task." + err});
+    			} else {
+      				res.json(404, { message: "Task not found."});
+    			}
+    		});
+  			//res.end(JSON.stringify(query));
+  		});
 		app.get('/tasks/:id', tasks.show);
-		app.get('/tasks', tasks.search);
 		app.post('/tasks', tasks.create);
-		app.put('/tasks/', tasks.update);
-		app.del('/tasks/', tasks.delete);
+		app.put('/tasks', tasks.update);
+		app.del('/tasks', tasks.delete);
 
 		http.createServer(app).listen(app.get('port'), function() {
 			console.log("Express server listening on port 3000");
