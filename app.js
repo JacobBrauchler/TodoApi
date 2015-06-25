@@ -3,6 +3,7 @@
  */
  
 var express = require('express'),
+	cors = require('cors'),
 	routes = require('./routes'),
 	http = require('http'),
 	tasks = require('./routes/tasks'),
@@ -30,6 +31,7 @@ var app = express();
 			app.use(app.router);
 			app.use(express.urlencoded());
 			app.use(express.json());
+			app.use(cors());
 
 		});
 		app.use(function(req, res, next) {
@@ -38,12 +40,16 @@ var app = express();
 		  next();
 		});
 		
+		var corsOptions = {
+		  origin: 'http://localhost:3000'
+	  };
+		
 
 		app.get('/', routes.index);
 		app.get('/tasks', tasks.index);
 		//app.get('/search', tasks.FindByQuery);
 		//app.get('/tasks/:task.:name?', task.FindByQuery); 
-		app.get('/search', function(req, res) {
+		app.get('/search', function(req, res, next) {
   			var query = req.query
   			//res.send(query['name']);
   			Task.findOne({name: query['name']}, function(err, doc) {

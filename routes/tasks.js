@@ -2,8 +2,8 @@ var Task = require('../models/task').Task;
 /*
  * Tasks Routes
  */
-exports.index = function(req, res) {
-  Task.find({}, function(err, docs) {
+exports.index = function(req, res, next) {
+  Task.find({}, function(err, docs, next) {
     if(!err) {
       res.json(200, { tasks: docs });  
     } else {
@@ -12,7 +12,7 @@ exports.index = function(req, res) {
   });
 }
 
-exports.show = function(req, res) {
+exports.show = function(req, res, next) {
 
   var id = req.params.id; 
   Task.findById(id, function(err, doc) {
@@ -26,7 +26,7 @@ exports.show = function(req, res) {
   });
 }
 
-exports.create = function(req, res) {
+exports.create = function(req, res, next) {
 
   var task_name = req.body.task_name; // Name of task. 
   var description = req.body.task_description;  // Description of the task
@@ -62,7 +62,7 @@ exports.create = function(req, res) {
 
 }
 
-exports.update = function(req, res) {
+exports.update = function(req, res, next) {
 
   var id = req.body.id; 
   var task_name = req.body.task_name;
@@ -87,7 +87,7 @@ exports.update = function(req, res) {
     }); 
 }
 
-exports.delete = function(req, res) {
+exports.delete = function(req, res, next) {
 
   var id = req.body.id; 
   Task.findById(id, function(err, doc) {
